@@ -166,7 +166,18 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`RouTe host запущен на http://localhost:${PORT}`);
+});
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    // eslint-disable-next-line no-console
+    console.error(`Порт ${PORT} уже используется. Укажите другой порт через PORT.`);
+    process.exit(1);
+  }
+  // eslint-disable-next-line no-console
+  console.error('Ошибка запуска сервера:', error);
+  process.exit(1);
 });
